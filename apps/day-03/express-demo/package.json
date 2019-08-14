@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run-app": "nodemon index",
+    "start": "nodemon index"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
     "config": "^3.2.2",
     "express": "^4.17.1",
     "morgan": "^1.9.1",
+    "nodemon": "^1.19.1",
     "pug": "^2.0.4"
   },
   "devDependencies": {}
