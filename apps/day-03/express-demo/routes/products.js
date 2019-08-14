@@ -14,8 +14,8 @@ const validateProduct = product => {
     price: Joi.number().required()
   });
 
-  return Joi.validate(product, schema, { convert: false });
-}
+  return Joi.validate(product, schema);
+};
 
 router.route('/')
   .get((req, res) => {
@@ -29,7 +29,7 @@ router.route('/')
 
     const newProduct = { ...req.body, id: products[products.length - 1].id + 1 };
     products.push(newProduct);
-    res.json(newProduct);
+    res.status(201).json(newProduct);
   });
 
 router.route('/:id')
@@ -42,6 +42,11 @@ router.route('/:id')
     res.json(product);
   })
   .put((req, res) => {
+    const result = validateProduct(req.body);
+    if (result.error) {
+      return res.status(400).json({ message: result.error.details[0].message })
+    }
+
     const product = products.find(p => p.id === parseInt(req.params.id));
     if (!product) {
       return res.status(404).json({ message: 'Product does not exist!' });
@@ -53,25 +58,6 @@ router.route('/:id')
     res.json(product);
   })
   .delete((req, res) => {
-    // #1
-    // let index = 0;
-    // const product = products.find((p, i) => {
-    //   index = i;
-    //   return p.id === parseInt(req.params.id);
-    // });
-
-    // if (!product) {
-    //   return res.status(404).json({ message: 'Product does not exist!' });
-    // }
-    // products.splice(index, 1);
-    // res.json({message: 'Product deleted successfully!'});
-
-    // #2
-    // const index = products.findIndex(p => p.id === parseInt(req.params.id));
-    // products.splice(index, 1);
-    // res.json({message: 'Product deleted successfully!'});
-
-    // #3
     const product = products.find(p => p.id === parseInt(req.params.id));
     if (!product) {
       return res.status(404).json({ message: 'Product does not exist!' });
