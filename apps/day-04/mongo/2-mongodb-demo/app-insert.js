@@ -24,7 +24,7 @@ MongoClient.connect(serverUri, (err, client) => {
     assert.equal(err, null);
 
     console.log('Product added successfully!');
-    console.log('Result:', result);
+    console.log('Result:', result.ops);
     client.close();
   });
 });

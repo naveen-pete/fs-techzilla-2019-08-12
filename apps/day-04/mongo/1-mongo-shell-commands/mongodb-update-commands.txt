@@ -2,6 +2,7 @@ Introduction to MongoDB - Updating documents
 --------------------------------------------
 
 * updateOne()
+db.moviesScratch.insertOne({ "title": "The Martian", "year": 2015, "imdb": "tt3659388" });
 
 // updating one field of one document
 db.moviesScratch.updateOne({
@@ -11,6 +12,15 @@ db.moviesScratch.updateOne({
       poster: "http://ia.media-imdb.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_SX300.jpg"
   }
 });
+
+db.moviesScratch.updateOne({
+  title: "The Martian"}, 
+  {
+    $unset: {
+      poster: ''
+  }
+});
+
 
 // updating nested document of a document
 db.moviesScratch.updateOne({
