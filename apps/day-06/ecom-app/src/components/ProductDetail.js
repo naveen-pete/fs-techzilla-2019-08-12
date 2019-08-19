@@ -17,7 +17,7 @@ const ProductDetail = (props) => {
       </div>
       <ul className="list-group list-group-flush">
         <li className="list-group-item">Price: {price}</li>
-        <li className="list-group-item">Category: {category}</li>
+        <li className="list-group-item">Category: {category.name}</li>
       </ul>
     </div>
   );

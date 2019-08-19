@@ -2,6 +2,7 @@ const morgan = require('morgan');
 const express = require('express');
 const config = require('config');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const log = require('./middleware/log');
 const productRouter = require('./routes/products');
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 app.use(express.static('public'));
+app.use(cors());
 
 // routes
 app.use('/api/products', productRouter);

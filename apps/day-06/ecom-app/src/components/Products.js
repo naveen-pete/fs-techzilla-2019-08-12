@@ -1,48 +1,69 @@
 import React from 'react';
 
 import ProductDetail from './ProductDetail';
+import Categories, { all } from './Categories';
+import ProductForm from './ProductForm';
+import { getProducts, addProduct } from '../api/products';
 
 class Products extends React.Component {
   constructor() {
     super();
+
+    // this.handleCategorySelect = this.handleCategorySelect.bind(this);
+
     this.state = {
-      products: [
-        {
-          id: 1,
-          name: 'iPhone X',
-          price: 65000,
-          description: 'Latest from Apple',
-          category: 'Mobiles',
-          imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/411SxsDFpsL._SL1024_.jpg'
-        },
-        {
-          id: 2,
-          name: 'Samsung Galaxy Note 10',
-          price: 75000,
-          description: 'Latest from Samsung',
-          category: 'Mobiles',
-          imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/71G1FCIP1EL._SL1500_.jpg'
-        },
-        {
-          id: 3,
-          name: 'Google Pixel 3',
-          price: 55000,
-          description: 'Latest from Google',
-          category: 'Mobiles',
-          imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/51GSapCrtGL._SL1000_.jpg'
-        }
-      ]
+      products: [],
+      selectedCategory: all
     };
   }
 
+  componentDidMount() {
+    this.getProducts();
+  }
+
+  handleCategorySelect = (category) => {
+    this.setState({ selectedCategory: category });
+  }
+
+  async getProducts() {
+    try {
+      const products = await getProducts();
+      this.setState({ products });
+    } catch (e) {
+      console.log('Get products failed.');
+      console.log('Error:', e);
+    }
+  }
+
+  handleProductAdd = async product => {
+    try {
+      await addProduct(product);
+      this.getProducts();
+    } catch (e) {
+      console.log('Add product failed.');
+      console.log('Error:', e);
+    }
+  }
+
   render() {
-    const { products } = this.state;
+    const { products, selectedCategory } = this.state;
+    let filteredProducts = selectedCategory._id === 'all'
+      ? products
+      : products.filter(p => p.category._id === selectedCategory._id);
+
     return (
-      <div>
-        <h2>Products</h2>
-        {products.map(p => {
-          return <ProductDetail key={p.id} product={p} />;
-        })}
+      <div className="row">
+        <div className="col-md-3">
+          <Categories onCategorySelect={this.handleCategorySelect} />
+        </div>
+        <div className="col-md-4">
+          {filteredProducts.map(p => {
+            return <ProductDetail key={p._id} product={p} />;
+          })}
+        </div>
+        <div className="col-md-5">
+          <ProductForm onProductAdd={this.handleProductAdd} />
+        </div>
       </div>
     );
   }
