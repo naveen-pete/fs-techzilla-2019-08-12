@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { getCategories } from '../api/categories';
-import { addProduct } from '../api/products';
+import { addProduct, getProduct, updateProduct } from '../api/products';
 
 class ProductForm extends React.Component {
   state = {
     categories: [],
 
+    _id: null,
     name: '',
     description: '',
     price: 0,
@@ -16,7 +17,23 @@ class ProductForm extends React.Component {
   }
 
   componentDidMount() {
+    const id = this.props.match.params.id;
+
+    if (id) {
+      this.getProduct(id);
+    }
     this.getCategories();
+  }
+
+  async getProduct(id) {
+    try {
+      const product = await getProduct(id);
+      const { _id, name, description, price, imageUrl, category: { _id: category } } = product;
+      this.setState({ _id, name, description, price, imageUrl, category });
+    } catch (e) {
+      console.log('Get product failed.');
+      console.log('Error:', e);
+    }
   }
 
   async getCategories() {
@@ -44,14 +61,30 @@ class ProductForm extends React.Component {
     }
   }
 
+  async updateProduct(id, product) {
+    try {
+      await updateProduct(id, product);
+
+      this.props.history.push('/products');
+    } catch (e) {
+      console.log('Update product failed.');
+      console.log('Error:', e);
+    }
+  }
+
   handleSubmit = event => {
     event.preventDefault();
 
-    const { name, description, price, imageUrl, category } = this.state;
+    const { _id, name, description, price, imageUrl, category } = this.state;
     const product = { name, description, price, imageUrl, category };
     product.price = parseInt(product.price);
 
-    this.addProduct(product);
+    if (!_id) {
+      this.addProduct(product);
+    } else {
+      this.updateProduct(_id, product);
+    }
+
   }
 
   render() {

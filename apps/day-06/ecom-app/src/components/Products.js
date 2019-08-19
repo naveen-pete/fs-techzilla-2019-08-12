@@ -8,8 +8,6 @@ class Products extends React.Component {
   constructor() {
     super();
 
-    // this.handleCategorySelect = this.handleCategorySelect.bind(this);
-
     this.state = {
       products: [],
       selectedCategory: all
@@ -34,16 +32,6 @@ class Products extends React.Component {
     }
   }
 
-  handleProductAdd = async product => {
-    try {
-      await addProduct(product);
-      this.getProducts();
-    } catch (e) {
-      console.log('Add product failed.');
-      console.log('Error:', e);
-    }
-  }
-
   renderProducts(products) {
     return products.map(p => (
       <tr key={p._id}>
@@ -52,12 +40,12 @@ class Products extends React.Component {
         <td className="text-center">{p.category.name}</td>
         <td className="text-center">
           <div className="btn-group btn-group-sm">
-            <a className="btn btn-info">
+            <Link className="btn btn-info" to={`/products/${p._id}`}>
               View
-          </a>
-            <a className="btn btn-primary">
+          </Link>
+            <Link className="btn btn-primary" to={`/products/${p._id}/edit`} >
               Edit
-          </a>
+          </Link>
             <a className="btn btn-warning">
               Delete
           </a>

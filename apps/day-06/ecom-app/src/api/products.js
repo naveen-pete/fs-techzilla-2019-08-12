@@ -5,6 +5,11 @@ export const getProducts = async () => {
   return response.json();
 };
 
+export const getProduct = async (id) => {
+  const response = await fetch(`${apiUrl}/${id}`);
+  return response.json();
+};
+
 export const addProduct = async product => {
   const response = await fetch(
     apiUrl, {
@@ -17,4 +22,18 @@ export const addProduct = async product => {
   );
 
   return response.json();
-}
+};
+
+export const updateProduct = async (id, product) => {
+  const response = await fetch(
+    `${apiUrl}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(product)
+    }
+  );
+
+  return response.json();
+};
