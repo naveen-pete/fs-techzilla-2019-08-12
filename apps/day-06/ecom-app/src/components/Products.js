@@ -1,8 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-import ProductDetail from './ProductDetail';
-import Categories, { all } from './Categories';
-import ProductForm from './ProductForm';
+import { all } from './Categories';
 import { getProducts, addProduct } from '../api/products';
 
 class Products extends React.Component {
@@ -45,6 +44,29 @@ class Products extends React.Component {
     }
   }
 
+  renderProducts(products) {
+    return products.map(p => (
+      <tr key={p._id}>
+        <td>{p.name}</td>
+        <td className="text-right">{p.price}</td>
+        <td className="text-center">{p.category.name}</td>
+        <td className="text-center">
+          <div className="btn-group btn-group-sm">
+            <a className="btn btn-info">
+              View
+          </a>
+            <a className="btn btn-primary">
+              Edit
+          </a>
+            <a className="btn btn-warning">
+              Delete
+          </a>
+          </div>
+        </td>
+      </tr>
+    ));
+  }
+
   render() {
     const { products, selectedCategory } = this.state;
     let filteredProducts = selectedCategory._id === 'all'
@@ -53,16 +75,27 @@ class Products extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-md-3">
-          <Categories onCategorySelect={this.handleCategorySelect} />
-        </div>
-        <div className="col-md-4">
-          {filteredProducts.map(p => {
-            return <ProductDetail key={p._id} product={p} />;
-          })}
-        </div>
-        <div className="col-md-5">
-          <ProductForm onProductAdd={this.handleProductAdd} />
+        <div className="col-md-12">
+          <h3>Products</h3>
+          <hr />
+          <Link to="/products/new" className="btn btn-primary">New</Link>
+          <br />
+          <br />
+          <div>
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th className="text-center">Name</th>
+                  <th className="text-center">Price</th>
+                  <th className="text-center">Category</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.renderProducts(filteredProducts)}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );

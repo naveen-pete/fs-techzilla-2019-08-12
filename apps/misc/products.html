@@ -1,35 +1,41 @@
-<h3>Products</h3>
-<div>
-</div>
-<hr>
-<a routerLink="/products/new" class="btn btn-primary">New</a>
-<br>
-<br>
-<div>
-  <table class="table table-bordered">
-    <tr>
-      <th class="text-center">Name</th>
-      <th class="text-center">Price</th>
-      <th class="text-center">Available</th>
-      <th></th>
-    </tr>
-    <tr *ngFor="let product of products">
-      <td>{{product.name}}</td>
-      <td class="text-right">{{product.price | currency:'INR'}}</td>
-      <td class="text-center">{{product.isAvailable ? 'Yes' : 'No'}}</td>
-      <td class="text-center">
-        <div class="btn-group btn-group-sm">
-          <a [routerLink]="['/products', product.id]" class="btn btn-info">
-            View
-          </a>
-          <a [routerLink]="['/products', product.id, 'edit']" class="btn btn-primary">
-            Edit
-          </a>
-          <a class="btn btn-warning" (click)="onDelete(product.id)">
-            Delete
-          </a>
-        </div>
-      </td>
-    </tr>
-  </table>
+<div className="row">
+  <div className="col-md-12">
+    <h3>Products</h3>
+    <hr />
+    <Link to="/products/new" className="btn btn-primary">New</Link>
+    <br />
+    <br />
+    <div>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th className="text-center">Name</th>
+            <th className="text-center">Price</th>
+            <th className="text-center">Category</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr key={p._id}>
+            <td>{p.name}</td>
+            <td className="text-right">{p.price}</td>
+            <td className="text-center">{p.category.name}</td>
+            <td className="text-center">
+              <div className="btn-group btn-group-sm">
+                <a className="btn btn-info">
+                  View
+                </a>
+                <a className="btn btn-primary">
+                  Edit
+                </a>
+                <a className="btn btn-warning">
+                  Delete
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
