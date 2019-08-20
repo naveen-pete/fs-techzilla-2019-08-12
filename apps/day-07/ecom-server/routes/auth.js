@@ -1,4 +1,6 @@
 const express = require('express');
+const _ = require('lodash');
+
 const { validate } = require('../models/auth');
 const { User } = require('../models/user');
 const { compareHash } = require('../helpers/hash');
@@ -22,7 +24,9 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'Invalid user or password.' });
     }
 
-    res.json({ message: 'Login successful' });
+    const token = user.generateAuthToken();
+
+    res.json({ token, user: _.pick(user, ['_id', 'name', 'isAdmin']) });
   } catch (e) {
     res.json({ message: 'Server error.' });
     console.log('ERROR:', e.message);

@@ -8,6 +8,8 @@ import Products from './Products';
 import ProductForm from './ProductForm';
 import ProductDetail from './ProductDetail';
 import Users from './Users';
+import RegisterUser from './RegisterUser';
+import Login from './Login';
 
 // Function based component
 const App = () => {
@@ -21,6 +23,8 @@ const App = () => {
       <Route exact path="/products/:id" component={ProductDetail} />
       <Route path="/products/:id/edit" component={ProductForm} />
       <Route path="/users" component={Users} />
+      <Route path="/register" component={RegisterUser} />
+      <Route path="/login" component={Login} />
     </Switch>
   </div>;
 };

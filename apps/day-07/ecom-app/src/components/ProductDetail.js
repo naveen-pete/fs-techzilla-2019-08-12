@@ -36,16 +36,20 @@ class ProductDetail extends Component {
 
     const { name, description, price, imageUrl, category } = this.state.product;
     return (
-      <div className="card border-secondary mb-3" style={cardStyle}>
-        <img src={imageUrl} className="card-img-top" alt={name} style={imageStyle}></img>
-        <div className="card-body">
-          <h5 className="card-title">{name}</h5>
-          <p className="card-text">{description}</p>
+      <div>
+        <h3>Product Details </h3>
+        <hr />
+        <div className="card border-secondary mb-3" style={cardStyle}>
+          <img src={imageUrl} className="card-img-top" alt={name} style={imageStyle}></img>
+          <div className="card-body">
+            <h5 className="card-title">{name}</h5>
+            <p className="card-text">{description}</p>
+          </div>
+          <ul className="list-group list-group-flush">
+            <li className="list-group-item">Price: {price}</li>
+            <li className="list-group-item">Category: {category.name}</li>
+          </ul>
         </div>
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item">Price: {price}</li>
-          <li className="list-group-item">Category: {category.name}</li>
-        </ul>
       </div>
     );
   }

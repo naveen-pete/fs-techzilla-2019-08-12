@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { all } from './Categories';
-import { getProducts, addProduct } from '../api/products';
+import { getProducts, deleteProduct } from '../api/products';
 
 class Products extends React.Component {
   constructor() {
@@ -32,6 +32,16 @@ class Products extends React.Component {
     }
   }
 
+  async deleteProduct(id) {
+    try {
+      await deleteProduct(id);
+      this.getProducts();
+    } catch (e) {
+      console.log('Delete product failed.');
+      console.log('Error:', e);
+    }
+  }
+
   renderProducts(products) {
     return products.map(p => (
       <tr key={p._id}>
@@ -42,13 +52,17 @@ class Products extends React.Component {
           <div className="btn-group btn-group-sm">
             <Link className="btn btn-info" to={`/products/${p._id}`}>
               View
-          </Link>
+            </Link>
             <Link className="btn btn-primary" to={`/products/${p._id}/edit`} >
               Edit
-          </Link>
-            <a className="btn btn-warning">
+            </Link>
+            <button className="btn btn-warning" onClick={() => {
+              if (window.confirm('Are you sure?')) {
+                this.deleteProduct(p._id);
+              }
+            }}>
               Delete
-          </a>
+            </button>
           </div>
         </td>
       </tr>
@@ -88,7 +102,6 @@ class Products extends React.Component {
       </div>
     );
   }
-
 }
 
 export default Products;

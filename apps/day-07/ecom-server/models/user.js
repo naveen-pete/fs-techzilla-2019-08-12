@@ -1,5 +1,8 @@
 const Joi = require('@hapi/joi');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const _ = require('lodash');
+const config = require('config');
 
 const validate = user => {
   const schema = Joi.object().keys({
@@ -37,6 +40,13 @@ const userSchema = new mongoose.Schema({
     default: false
   }
 });
+
+userSchema.methods.generateAuthToken = function () {
+  const payload = _.pick(this, ['_id', 'name', 'isAdmin']);
+  const secretKey = config.get('app-secret-key');
+  const token = jwt.sign(payload, secretKey);
+  return token;
+};
 
 const User = mongoose.model('user', userSchema);
 

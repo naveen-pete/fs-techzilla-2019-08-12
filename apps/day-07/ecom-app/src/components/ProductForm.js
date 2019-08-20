@@ -84,7 +84,6 @@ class ProductForm extends React.Component {
     } else {
       this.updateProduct(_id, product);
     }
-
   }
 
   render() {
@@ -93,6 +92,7 @@ class ProductForm extends React.Component {
     return (
       <div>
         <h3>Product Form</h3>
+        <hr />
         <div className="card bg-light">
           <div className="card-body">
             <form onSubmit={this.handleSubmit}>

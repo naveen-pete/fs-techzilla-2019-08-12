@@ -1,6 +1,8 @@
 const express = require('express');
 
 const { Product, validate } = require('../models/product');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 const router = express.Router();
 
@@ -18,7 +20,7 @@ router.route('/')
       console.log('Error:', e.message);
     }
   })
-  .post(async (req, res) => {
+  .post(auth, async (req, res) => {
     const result = validate(req.body);
     if (result.error) {
       return res.status(400).json({ message: result.error.details[0].message })
@@ -57,7 +59,7 @@ router.route('/:id')
       console.log('Error:', e.message);
     }
   })
-  .put(async (req, res) => {
+  .put(auth, async (req, res) => {
     const result = validate(req.body);
     if (result.error) {
       return res.status(400).json({ message: result.error.details[0].message })
@@ -78,7 +80,7 @@ router.route('/:id')
       console.log('Error:', e.message);
     }
   })
-  .delete(async (req, res) => {
+  .delete([auth, admin], async (req, res) => {
     try {
       const product = await Product.findByIdAndDelete(req.params.id)
       if (!product) {

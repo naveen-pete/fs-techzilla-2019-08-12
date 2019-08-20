@@ -3,11 +3,13 @@ const _ = require('lodash');
 
 const { createHash } = require('../helpers/hash');
 const { User, validate } = require('../models/user');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 const router = express.Router();
 
 router.route('/')
-  .get(async (req, res) => {
+  .get([auth, admin], async (req, res) => {
     try {
       const users = await User.find().select('_id name email isAdmin');
       res.json(users);
