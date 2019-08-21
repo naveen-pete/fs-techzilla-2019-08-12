@@ -1,45 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import { all } from './Categories';
-import { getProducts, deleteProduct } from '../api/products';
+import Categories, { all } from './Categories';
+import { deleteProduct, getProducts } from '../actions/products';
 
 class Products extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      products: [],
       selectedCategory: all
     };
   }
 
   componentDidMount() {
-    this.getProducts();
+    this.props.getProducts();
   }
 
   handleCategorySelect = (category) => {
     this.setState({ selectedCategory: category });
-  }
-
-  async getProducts() {
-    try {
-      const products = await getProducts();
-      this.setState({ products });
-    } catch (e) {
-      console.log('Get products failed.');
-      console.log('Error:', e);
-    }
-  }
-
-  async deleteProduct(id) {
-    try {
-      await deleteProduct(id);
-      this.getProducts();
-    } catch (e) {
-      console.log('Delete product failed.');
-      console.log('Error:', e);
-    }
   }
 
   renderProducts(products) {
@@ -58,7 +38,7 @@ class Products extends React.Component {
             </Link>
             <button className="btn btn-warning" onClick={() => {
               if (window.confirm('Are you sure?')) {
-                this.deleteProduct(p._id);
+                this.props.deleteProduct(p._id);
               }
             }}>
               Delete
@@ -70,7 +50,8 @@ class Products extends React.Component {
   }
 
   render() {
-    const { products, selectedCategory } = this.state;
+    const { selectedCategory } = this.state;
+    const { products } = this.props;
     let filteredProducts = selectedCategory._id === 'all'
       ? products
       : products.filter(p => p.category._id === selectedCategory._id);
@@ -82,6 +63,8 @@ class Products extends React.Component {
           <hr />
           <Link to="/products/new" className="btn btn-primary">New</Link>
           <br />
+          <br />
+          <Categories onCategorySelect={this.handleCategorySelect} />
           <br />
           <div>
             <table className="table table-bordered">
@@ -104,4 +87,12 @@ class Products extends React.Component {
   }
 }
 
-export default Products;
+const mapStateToProps = ({ products }) => ({ products });
+
+const mapDispatchToProps = dispatch => ({
+  getProducts: () => dispatch(getProducts()),
+  deleteProduct: id => dispatch(deleteProduct(id))
+})
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Products);
+export default connect(mapStateToProps, { getProducts, deleteProduct })(Products);

@@ -1,55 +1,40 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { getCategories } from '../api/categories';
+import { getCategories } from '../actions/categories';
 
 export const all = { _id: 'all', name: 'All' };
 
 class Categories extends React.Component {
-  state = {
-    categories: [],
-    selectedCategory: all
-  }
-
   componentDidMount() {
-    this.getCategories();
+    this.props.getCategories();
   }
 
-  async getCategories() {
-    try {
-      const categories = await getCategories();
-      this.setState({ categories: [all, ...categories] });
-    } catch (e) {
-      console.log('Get categories failed.');
-      console.log('Error:', e);
-    }
-  }
-
-  handleButtonClick = category => {
-    this.setState({ selectedCategory: category });
+  handleCategorySelect = e => {
+    const category = this.props.categories.find(c => c._id === e.target.value);
     this.props.onCategorySelect(category);
   }
 
   render() {
-    const { categories, selectedCategory } = this.state;
+    const { categories } = this.props;
 
-    return <div className="list-group">
-      {categories.map(c => {
-        const className = c._id === selectedCategory._id
-          ? 'list-group-item list-group-item-action active'
-          : 'list-group-item list-group-item-action'
-        return (
-          <button
-            type="button"
-            key={c._id}
-            className={className}
-            onClick={() => this.handleButtonClick(c)}
-          >
-            {c.name}
-          </button>
-        );
-      })}
-    </div>
+    return <select className="form-control" onChange={this.handleCategorySelect}>
+      {categories.map(c => (
+        <option
+          value={c._id}
+          key={c._id}
+        >
+          {c.name}
+        </option>
+      ))}
+    </select>
   }
 }
 
-export default Categories;
+const mapStateToProps = ({ categories }) => ({ categories: [all, ...categories] });
+
+const mapDispatchToProps = dispatch => ({
+  getCategories: () => dispatch(getCategories())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Categories);

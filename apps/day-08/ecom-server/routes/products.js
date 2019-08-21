@@ -28,9 +28,12 @@ router.route('/')
 
     try {
       const { name, description, price, category, imageUrl } = req.body;
-      const product = await Product.create({
+      let product = await Product.create({
         name, description, price, category, imageUrl
       });
+
+      const opts = [{ path: 'category' }]
+      product = await Product.populate(product, opts);
 
       res.status(201).json(product);
     } catch (e) {
@@ -72,7 +75,7 @@ router.route('/:id')
         price: req.body.price,
         category: req.body.category,
         imageUrl: req.body.imageUrl
-      }, { new: true });
+      }, { new: true }).populate('category');
 
       res.json(product);
     } catch (e) {

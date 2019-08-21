@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import { getCategories } from '../api/categories';
-import { addProduct, getProduct, updateProduct } from '../api/products';
+import * as Actions from '../actions/products';
+import { getCategories } from '../actions/categories';
 
 class ProductForm extends React.Component {
   state = {
-    categories: [],
-
     _id: null,
     name: '',
     description: '',
@@ -22,54 +21,27 @@ class ProductForm extends React.Component {
     if (id) {
       this.getProduct(id);
     }
-    this.getCategories();
+    this.props.getCategories();
   }
 
-  async getProduct(id) {
-    try {
-      const product = await getProduct(id);
-      const { _id, name, description, price, imageUrl, category: { _id: category } } = product;
-      this.setState({ _id, name, description, price, imageUrl, category });
-    } catch (e) {
-      console.log('Get product failed.');
-      console.log('Error:', e);
-    }
-  }
-
-  async getCategories() {
-    try {
-      const categories = await getCategories();
-      this.setState({ categories });
-    } catch (e) {
-      console.log('Get categories failed.');
-      console.log('Error:', e);
-    }
+  getProduct(id) {
+    this.props.getProduct(id);
+    const { _id, name, description, price, imageUrl, category: { _id: category } } = this.props.product;
+    this.setState({ _id, name, description, price, imageUrl, category });
   }
 
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
   }
 
-  async addProduct(product) {
-    try {
-      await addProduct(product);
-
-      this.props.history.push('/products');
-    } catch (e) {
-      console.log('Add product failed.');
-      console.log('Error:', e);
-    }
+  addProduct(product) {
+    this.props.addProduct(product);
+    this.props.history.push('/products');
   }
 
-  async updateProduct(id, product) {
-    try {
-      await updateProduct(id, product);
-
-      this.props.history.push('/products');
-    } catch (e) {
-      console.log('Update product failed.');
-      console.log('Error:', e);
-    }
+  updateProduct(id, product) {
+    this.props.updateProduct(id, product);
+    this.props.history.push('/products');
   }
 
   handleSubmit = event => {
@@ -87,7 +59,8 @@ class ProductForm extends React.Component {
   }
 
   render() {
-    const { categories, name, description, price, imageUrl, category } = this.state;
+    const { name, description, price, imageUrl, category } = this.state;
+    const { categories } = this.props;
 
     return (
       <div>
@@ -169,4 +142,17 @@ class ProductForm extends React.Component {
   }
 }
 
-export default ProductForm;
+const mapStateToProps = ({ categories, products }, ownProps) => ({
+  categories,
+  product: products.find(p => p._id === ownProps.match.params.id)
+});
+
+const mapDispatchToProps = dispatch => ({
+  addProduct: product => dispatch(Actions.addProduct(product)),
+  getCategories: () => dispatch(getCategories()),
+  getProduct: id => dispatch(Actions.getProduct(id)),
+  updateProduct: (id, product) => dispatch(Actions.updateProduct(id, product)),
+  deleteProduct: id => dispatch(Actions.deleteProduct(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductForm);
