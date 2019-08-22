@@ -3,7 +3,6 @@ const config = require('config');
 
 module.exports = (req, res, next) => {
   const token = req.header('x-auth-token');
-  console.log('token:', token, typeof token);
   if (!token) {
     return res.status(401).send({ message: 'Not authenticated. Auth token missing.' });
   }
