@@ -21,7 +21,7 @@ const App = () => {
       <PrivateRoute exact path="/products/new" component={ProductForm} />
       <Route exact path="/products/:id" component={ProductDetail} />
       <PrivateRoute path="/products/:id/edit" component={ProductForm} />
-      <PrivateRoute path="/users" component={Users} />
+      <PrivateRoute admin="true" path="/users" component={Users} />
       <Route path="/register" component={RegisterUser} />
       <Route path="/login" component={Login} />
     </Switch>

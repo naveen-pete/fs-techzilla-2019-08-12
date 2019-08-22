@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Categories, { all } from './Categories';
 import { deleteProduct, getProducts } from '../actions/products';
+import auth from '../api/auth';
 
 class Products extends React.Component {
   constructor() {
@@ -36,13 +37,15 @@ class Products extends React.Component {
             <Link className="btn btn-primary" to={`/products/${p._id}/edit`} >
               Edit
             </Link>
-            <button className="btn btn-warning" onClick={() => {
-              if (window.confirm('Are you sure?')) {
-                this.props.deleteProduct(p._id);
-              }
-            }}>
-              Delete
+            {auth.isAuthenticated && auth.user.isAdmin && (
+              <button className="btn btn-warning" onClick={() => {
+                if (window.confirm('Are you sure?')) {
+                  this.props.deleteProduct(p._id);
+                }
+              }}>
+                Delete
             </button>
+            )}
           </div>
         </td>
       </tr>
