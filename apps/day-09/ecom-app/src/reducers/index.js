@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 
-import productsReducer from './products';
-import categoriesReducer from './categories';
+import products from './products';
+import categories from './categories';
+import authInfo from './auth';
 
 export default combineReducers({
-  products: productsReducer,
-  categories: categoriesReducer
+  products,
+  categories,
+  authInfo
 });

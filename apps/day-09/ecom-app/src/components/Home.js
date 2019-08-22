@@ -1,14 +1,15 @@
 import React from 'react';
-import { getUser } from '../api/storage';
+import { connect } from 'react-redux';
 
-const Home = () => {
-  let { name } = getUser() || {};
-  name = name || 'User';
+const Home = (props) => {
+  const name = props.user ? props.user.name : '';
 
   return <div>
     <h3>App Home</h3>
+    <hr />
     <h4>Welcome {name}!</h4>
   </div>;
 };
 
-export default Home;
+const mapStateToProps = ({ authInfo }) => ({ user: authInfo.user });
+export default connect(mapStateToProps, null)(Home);

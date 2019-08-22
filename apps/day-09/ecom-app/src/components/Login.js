@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { login } from '../api/auth';
-import { saveUserInfo } from '../api/storage';
+import auth from '../api/auth';
+import { setAuthInfo } from '../actions/auth';
 
 class Login extends Component {
   state = {
@@ -15,21 +16,22 @@ class Login extends Component {
 
   handleSubmit = async event => {
     event.preventDefault();
-    const credentials = { ...this.state };
     try {
-      const result = await login(credentials);
+      const credentials = { ...this.state };
+      await auth.authenticate(credentials);
 
-      if (!result.token) {
-        alert(result.message);
-        return;
+      const { isAuthenticated, token, user } = auth;
+      this.props.setAuthInfo({ isAuthenticated, token, user });
+
+      let pathname = '/';
+      const { state } = this.props.location;
+      if (state) {
+        pathname = state.from.pathname;
       }
 
-      saveUserInfo(result);
-      this.props.history.push('/');
-
+      this.props.history.push(pathname);
     } catch (e) {
-      console.log('Login failed.');
-      console.log('Error:', e.message);
+      alert(e.message);
     }
   }
 
@@ -76,4 +78,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(null, { setAuthInfo })(Login);

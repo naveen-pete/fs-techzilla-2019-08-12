@@ -1,4 +1,3 @@
-
 const key = 'userInfo';
 
 export const saveUserInfo = userInfo => {
@@ -20,7 +19,3 @@ export const getUser = () => {
 };
 
 export const clearUserInfo = () => localStorage.clear();
-
-export const isUserLoggedIn = () => {
-  return getAuthToken() ? true : false;
-};

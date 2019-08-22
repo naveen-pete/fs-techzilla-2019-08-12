@@ -94,5 +94,4 @@ const mapDispatchToProps = dispatch => ({
   deleteProduct: id => dispatch(deleteProduct(id))
 })
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Products);
-export default connect(mapStateToProps, { getProducts, deleteProduct })(Products);
+export default connect(mapStateToProps, mapDispatchToProps)(Products);

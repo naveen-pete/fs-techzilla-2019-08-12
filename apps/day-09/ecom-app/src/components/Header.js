@@ -1,9 +1,9 @@
 import React from 'react';
+import Nav from './Nav';
 
-// Function based component
 const Header = () => {
-  return <div>
-    <h1>eCom App</h1>
+  return <div className="container-fluid">
+    <Nav />
     <p>A simple eCommerce app in React</p>
   </div>;
 }
